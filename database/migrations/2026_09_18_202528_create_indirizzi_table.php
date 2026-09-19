@@ -117,9 +117,9 @@ return new class extends Migration
         Schema::create('addresses', function (Blueprint $table) {
             $table->id();
             $table->text('address');
-            $table->string('cap');
-            $table->text('district');
-            $table->text('notes');
+            $table->string('cap')->nullable();
+            $table->text('district')->nullable();
+            $table->text('notes')->nullable();
             $table->foreignIdFor(City::class, 'city_id')
                 ->nullable()
                 ->constrained('cities')

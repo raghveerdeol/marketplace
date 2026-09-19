@@ -13,17 +13,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('addresses_users_tabel', function (Blueprint $table) {
-            $table->id();
+        Schema::create('addresses_users', function (Blueprint $table) {
             $table->foreignIdFor(Address::class, 'address_id')
-                ->nullable()
                 ->constrained('addresses')
                 ->onDelete('cascade');
             $table->foreignIdFor(User::class, 'user_id')
-                ->nullable()
                 ->constrained('users')
                 ->onDelete('cascade');    
-            $table->timestamps();
+            $table->unique(['address_id', 'user_id']);
         });
     }
 
@@ -32,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('addresses_users_tabel');
+        Schema::dropIfExists('addresses_users');
     }
 };
