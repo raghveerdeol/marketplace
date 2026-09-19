@@ -26,6 +26,10 @@ class RegionResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'name';
 
+    protected static ?string $navigationParentItem = 'Addresses';
+
+    protected static ?int $navigationSort = 3;
+
     public static function form(Schema $schema): Schema
     {
         return RegionForm::configure($schema);
