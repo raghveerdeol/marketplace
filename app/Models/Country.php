@@ -20,6 +20,7 @@ class Country extends Model
 
     protected $attributes = [
         'name',
+        'code',
         'created_by',
         'updated_by',
         'deleted_by'
@@ -27,6 +28,7 @@ class Country extends Model
 
     protected $casts = [
         'name' => 'string',
+        'code' => 'string',
         'created_by' => 'integer',
         'updated_by' => 'integer',
         'deleted_by' => 'integer',

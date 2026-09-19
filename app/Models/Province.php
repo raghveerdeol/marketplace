@@ -20,6 +20,7 @@ class Province extends Model
 
     protected $attributes = [
         'name',
+        'code',
         'region_id',
         'created_by',
         'updated_by',
@@ -28,6 +29,7 @@ class Province extends Model
 
     protected $casts = [
         'name' => 'string',
+        'code' => 'string',
         'region_id' => 'integer',
         'created_by' => 'integer',
         'updated_by' => 'integer',
