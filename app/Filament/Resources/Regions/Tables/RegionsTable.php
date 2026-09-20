@@ -9,6 +9,7 @@ use Filament\Actions\ForceDeleteBulkAction;
 use Filament\Actions\RestoreBulkAction;
 use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 
@@ -20,17 +21,19 @@ class RegionsTable
             ->columns([
                 TextColumn::make('name')
                     ->searchable(),
-                TextColumn::make('country_id')
-                    ->numeric()
+                TextColumn::make('country.name')
                     ->sortable(),
-                TextColumn::make('created_by')
-                    ->numeric()
+                TextColumn::make('createdBy.name')
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->label('Created by')
                     ->sortable(),
-                TextColumn::make('updated_by')
-                    ->numeric()
+                TextColumn::make('updatedBy.name')
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->label('Updated by')
                     ->sortable(),
-                TextColumn::make('deleted_by')
-                    ->numeric()
+                TextColumn::make('deletedBy.name')
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->label('Deleted by')
                     ->sortable(),
                 TextColumn::make('created_at')
                     ->dateTime()
@@ -47,6 +50,10 @@ class RegionsTable
             ])
             ->filters([
                 TrashedFilter::make(),
+                SelectFilter::make('country')
+                    ->relationship('country', 'name')
+                    ->searchable()
+                    ->label('Country'),
             ])
             ->recordActions([
                 ViewAction::make(),

@@ -25,33 +25,32 @@ class CountryImporter extends Importer
                 ->requiredMapping()
                 ->ignoreBlankState()
                 ->rules(['required', 'max:255']),
+            ImportColumn::make('latitude')
+                ->ignoreBlankState(),
+            ImportColumn::make('longitude')
+                ->ignoreBlankState(),
         ];
     }
 
     public function resolveRecord(): Country
     {
-        if(!isset($this->data['name']) || !isset($this->data['code'])) throw new RowImportFailedException("Error, column or data not found!");
+        $importUser = $this->import->user_id ?? null;
 
-        $code = isset($this->data['code']) ? trim($this->data['code']) : null;
-        $name = isset($this->data['name']) ? trim($this->data['name']) : null;
-        $importUser = $this->import->user() ?? null;
+        $country = Country::firstOrNew([
+            'name' => trim($this->data['name']),
+            'code' => trim($this->data['code']),
+        ]);
 
-        $country = Country::query()
-            ->where('name', 'ILIKE', $name)
-            ->when($code, function($query) use ($code){
-                $query->where('code', 'ILIKE', $code);
-            })
-            ->first();
+        $country->fill([
+            'latitude' => isset($this->data['latitude']) ? trim($this->data['latitude']) : null,
+            'longitude' => isset($this->data['longitude']) ? trim($this->data['longitude']) : null,
+        ]);
 
-        if(!$country){
-            $newCountry = [
-                'name' => $name,
-                'code' => $code,
-                'created_by' => $importUser,
-                'updated_by' => $importUser,
-            ];
-            $country = Country::create($newCountry);
+        if(!$country->exists) {
+            $country->created_by = $importUser;
         }
+
+        $country->updated_by = $importUser;
 
         return $country;
     }

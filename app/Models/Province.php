@@ -16,7 +16,7 @@ class Province extends Model
          *
          * @var string
      */
-    protected $table = 'provincies';
+    protected $table = 'provinces';
 
     protected $fillable = [
         'name',

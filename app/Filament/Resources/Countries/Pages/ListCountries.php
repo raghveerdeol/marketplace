@@ -2,9 +2,12 @@
 
 namespace App\Filament\Resources\Countries\Pages;
 
+use App\Filament\Imports\CountryImporter;
 use App\Filament\Resources\Countries\CountryResource;
 use Filament\Actions\CreateAction;
+use Filament\Actions\ImportAction;
 use Filament\Resources\Pages\ListRecords;
+use Filament\Support\Icons\Heroicon;
 
 class ListCountries extends ListRecords
 {
@@ -14,6 +17,11 @@ class ListCountries extends ListRecords
     {
         return [
             CreateAction::make(),
+            ImportAction::make()
+                ->importer(CountryImporter::class)
+                ->label('Import Countries')
+                ->icon(Heroicon::OutlinedArrowUpTray)
+                ->color('success'),
         ];
     }
 }

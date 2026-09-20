@@ -4,6 +4,7 @@ namespace App\Filament\Imports;
 
 use App\Models\Country;
 use App\Models\Region;
+use Carbon\CarbonInterface;
 use Filament\Actions\Imports\Exceptions\RowImportFailedException;
 use Filament\Actions\Imports\ImportColumn;
 use Filament\Actions\Imports\Importer;
@@ -34,23 +35,28 @@ class RegionImporter extends Importer
 
     public function resolveRecord(): Region
     {
-        if(!isset($this->data['name'])) throw new RowImportFailedException("Error, column or data not found!");
-
-        $name = isset($this->data['name']) ? trim($this->data['name']) : null;
-        $importUser = $this->import->user() ?? null;
-
-        $region = Region::query()
-            ->where('name', 'ILIKE', $name)
+        $userId = $this->import->user_id;
+        $countryName = trim($this->data['country'] ?? '');
+    
+        $country = Country::query()
+            ->where('name', 'ILIKE', $countryName)
+            ->select('id')
             ->first();
 
-        if(!$region){
-            $newRegion = [
-                'name' => $name,
-                'created_by' => $importUser,
-                'updated_by' => $importUser,
-            ];
-            $region = Region::create($newRegion);
+        if (!$country) {
+            throw new RowImportFailedException("Paese not found: {$countryName}");
         }
+
+        $region = Region::firstOrNew([
+            'name' => trim($this->data['name']),
+            'country_id' => $country->id,
+        ]);
+
+        if(!$region->exists){
+            $region->created_by = $userId; 
+        }
+
+        $region->updated_by = $userId;
 
         return $region;
     }
@@ -64,5 +70,19 @@ class RegionImporter extends Importer
         }
 
         return $body;
+    }
+
+    /**
+       * @return int | array<int> | null
+    */
+    public function getJobBackoff(): int | array | null
+    {
+        return [60, 120, 300, 600];
+    }
+
+
+    public function getJobRetryUntil(): ?CarbonInterface
+    {
+        return now()->addMinutes(20);
     }
 }
