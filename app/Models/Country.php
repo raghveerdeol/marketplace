@@ -18,7 +18,7 @@ class Country extends Model
      */
     protected $table = 'countries';
 
-    protected $attributes = [
+    protected $fillable = [
         'name',
         'code',
         'created_by',

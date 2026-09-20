@@ -18,7 +18,7 @@ class Province extends Model
      */
     protected $table = 'provincies';
 
-    protected $attributes = [
+    protected $fillable = [
         'name',
         'code',
         'region_id',

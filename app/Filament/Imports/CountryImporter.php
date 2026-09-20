@@ -8,6 +8,7 @@ use Filament\Actions\Imports\ImportColumn;
 use Filament\Actions\Imports\Importer;
 use Filament\Actions\Imports\Models\Import;
 use Illuminate\Support\Number;
+use Carbon\CarbonInterface;
 
 class CountryImporter extends Importer
 {
@@ -31,14 +32,23 @@ class CountryImporter extends Importer
     {
         if(!isset($this->data['name']) || !isset($this->data['code'])) throw new RowImportFailedException("Error, column or data not found!");
 
+        $code = isset($this->data['code']) ? trim($this->data['code']) : null;
+        $name = isset($this->data['name']) ? trim($this->data['name']) : null;
+        $importUser = $this->import->user() ?? null;
+
         $country = Country::query()
-            ->where('name', 'ILIKE', trim($this->data['name']))
+            ->where('name', 'ILIKE', $name)
+            ->when($code, function($query) use ($code){
+                $query->where('code', 'ILIKE', $code);
+            })
             ->first();
 
         if(!$country){
             $newCountry = [
-                'name' => trim($this->data['name']),
-                'code' => trim($this->data['code'])
+                'name' => $name,
+                'code' => $code,
+                'created_by' => $importUser,
+                'updated_by' => $importUser,
             ];
             $country = Country::create($newCountry);
         }
@@ -55,5 +65,19 @@ class CountryImporter extends Importer
         }
 
         return $body;
+    }
+
+    /**
+       * @return int | array<int> | null
+    */
+    public function getJobBackoff(): int | array | null
+    {
+        return [60, 120, 300, 600];
+    }
+
+
+    public function getJobRetryUntil(): ?CarbonInterface
+    {
+        return now()->addMinutes(20);
     }
 }

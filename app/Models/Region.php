@@ -18,7 +18,7 @@ class Region extends Model
      */
     protected $table = 'regions';
 
-    protected $attributes = [
+    protected $fillable = [
         'name',
         'country_id',
         'created_by',

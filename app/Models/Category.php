@@ -18,7 +18,7 @@ class Category extends Model
      */
     protected $table = 'categories';
 
-    protected $attributes = [
+    protected $fillable = [
         'name',
         'description',
         'created_by',

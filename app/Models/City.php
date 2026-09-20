@@ -18,7 +18,7 @@ class City extends Model
      */
     protected $table = 'cities';
 
-    protected $attributes = [
+    protected $fillable = [
         'name',
         'province_id',
         'created_by',

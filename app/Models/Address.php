@@ -18,7 +18,7 @@ class Address extends Model
      */
     protected $table = 'addresses';
 
-    protected $attributes = [
+    protected $fillable = [
         'address',
         'cap',
         'district',
