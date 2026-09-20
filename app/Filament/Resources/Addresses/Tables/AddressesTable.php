@@ -18,22 +18,27 @@ class AddressesTable
     {
         return $table
             ->columns([
+                TextColumn::make('address')
+                    ->searchable(),
                 TextColumn::make('cap')
                     ->searchable(),
-                TextColumn::make('city_id')
-                    ->numeric()
+                TextColumn::make('city.name')
+                    ->label('City')
                     ->sortable(),
-                TextColumn::make('user_id')
-                    ->numeric()
+                TextColumn::make('user.name')
+                    ->label('User')
                     ->sortable(),
-                TextColumn::make('created_by')
-                    ->numeric()
+                TextColumn::make('createdBy.name')
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->label('Created by')
                     ->sortable(),
-                TextColumn::make('updated_by')
-                    ->numeric()
+                TextColumn::make('updatedBy.name')
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->label('Updated by')
                     ->sortable(),
-                TextColumn::make('deleted_by')
-                    ->numeric()
+                TextColumn::make('deletedBy.name')
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->label('Deleted by')
                     ->sortable(),
                 TextColumn::make('created_at')
                     ->dateTime()

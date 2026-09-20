@@ -8,6 +8,7 @@ use Filament\Actions\EditAction;
 use Filament\Actions\ForceDeleteBulkAction;
 use Filament\Actions\RestoreBulkAction;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 
@@ -19,17 +20,20 @@ class CitiesTable
             ->columns([
                 TextColumn::make('name')
                     ->searchable(),
-                TextColumn::make('province_id')
-                    ->numeric()
+                TextColumn::make('province.name')
+                    ->label('Province')
                     ->sortable(),
-                TextColumn::make('created_by')
-                    ->numeric()
+                TextColumn::make('createdBy.name')
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->label('Created by')
                     ->sortable(),
-                TextColumn::make('updated_by')
-                    ->numeric()
+                TextColumn::make('updatedBy.name')
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->label('Updated by')
                     ->sortable(),
-                TextColumn::make('deleted_by')
-                    ->numeric()
+                TextColumn::make('deletedBy.name')
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->label('Deleted by')
                     ->sortable(),
                 TextColumn::make('created_at')
                     ->dateTime()
@@ -46,6 +50,10 @@ class CitiesTable
             ])
             ->filters([
                 TrashedFilter::make(),
+                SelectFilter::make('province')
+                    ->label('Province')
+                    ->relationship('province', 'name')
+                    ->searchable(),
             ])
             ->recordActions([
                 EditAction::make(),

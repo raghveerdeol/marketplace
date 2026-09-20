@@ -19,24 +19,33 @@ class ProductsTable
     {
         return $table
             ->columns([
-                TextColumn::make('price')
-                    ->money()
-                    ->sortable(),
+                TextColumn::make('name')
+                    ->searchable(),
+                TextColumn::make('description')
+                    ->searchable(),
                 TextColumn::make('quantity')
                     ->numeric()
                     ->sortable(),
                 TextColumn::make('code')
-                    ->searchable(),
+                    ->searchable()
+                    ->copyable(),
+                TextColumn::make('price')
+                    ->money()
+                    ->sortable(),
                 IconColumn::make('visible_in_store')
-                    ->boolean(),
-                TextColumn::make('created_by')
-                    ->numeric()
+                    ->boolean()
                     ->sortable(),
-                TextColumn::make('updated_by')
-                    ->numeric()
+                TextColumn::make('createdBy.name')
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->label('Created by')
                     ->sortable(),
-                TextColumn::make('deleted_by')
-                    ->numeric()
+                TextColumn::make('updatedBy.name')
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->label('Updated by')
+                    ->sortable(),
+                TextColumn::make('deletedBy.name')
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->label('Deleted by')
                     ->sortable(),
                 TextColumn::make('created_at')
                     ->dateTime()
